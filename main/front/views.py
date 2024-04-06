@@ -11,10 +11,10 @@ def index(request):
     
     # way 1
     # reviews = models.Review.objects.all()
-    # products = models.Product.objects.all()
+    products = models.Product.objects.all()
     # result = []
     # for i in products:
-    #     data = models.WishList.objects.filter(product=x, user=request.user)
+    #     data = models.WishList.objects.filter(product=i, user=request.user)
     #     if data:
     #         i.is_like = True
     #     else:

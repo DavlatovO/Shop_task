@@ -185,7 +185,8 @@ class CartProduct(models.Model):
     count = models.IntegerField()
 
     def __str__(self):
-        return f'{self.product.name,self.count,self.cart.is_active}'
+       return f'{self.user.username}, Status: {self.status}'
+
 
     @property
     def price(self):
