@@ -93,9 +93,10 @@ def carts(request):
 
 @login_required(login_url='auth:login')
 def active_cart(request):
-    queryset , _ = models.Cart.objects.get_or_create(user=request.user, is_active=True)
+    # Get or create an active cart for the user
+    queryset, _ = models.Cart.objects.get_or_create(user=request.user, status=2, defaults={'is_active': True})
+    # Redirect to cart detail view with the code of the active cart
     return redirect('front:cart_detail', queryset.code)
-
 
 
 @login_required(login_url='auth:login')

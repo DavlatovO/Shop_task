@@ -141,10 +141,12 @@ class Cart(CodeGenerate):
         )
     )
     order_date = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.user.username},{self.is_active}'
+    is_active = models.BooleanField(default=False)
     
+    def __str__(self):
+        return f'{self.user.username}, Status: {self.status}, Active: {self.is_active}'
+    
+
     def save(self, *args, **kwargs):
         if self.status == 2 and Cart.objects.get(id=self.id).status == 1:
             self.order_date = datetime.now()
@@ -185,8 +187,7 @@ class CartProduct(models.Model):
     count = models.IntegerField()
 
     def __str__(self):
-       return f'{self.user.username}, Status: {self.status}'
-
+        return f'{self.product.name,self.count,self.cart.is_active}'
 
     @property
     def price(self):
