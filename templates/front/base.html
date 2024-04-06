@@ -96,6 +96,9 @@
                                                 {% if user.is_authenticated %}
                                                 <li><a class="dropdown-item" href="{% url 'auth:profile' %}">My account</a></li>
                                                 <li><a class="dropdown-item" href="{% url 'front:active_cart' %}">My active cart</a></li>
+                                                {% if user.is_staff %}
+                                                <li><a class="dropdown-item" href="{% url 'dashboard:index' %}">Dashboard</a>
+                                                {% endif %}
                                                 <li><a class="dropdown-item" href="{% url 'auth:logout' %}">Logout</a>
                                                 {% else %}
                                                 <li><a class="dropdown-item" href="{% url 'auth:login' %}">Login</a>
@@ -104,8 +107,9 @@
                                                 </li>
                                             </ul>
                                         </li>
+                                        {% if user.is_authenticated %}
                                         <li class="d-none d-lg-block">
-                                            <a href="wishlist.html">
+                                            <a href="{% url 'front:wishlist' %}">
                                                 <i class="pe-7s-like"></i>
                                             </a>
                                         </li>
@@ -114,11 +118,7 @@
                                                 <i class="pe-7s-shopbag"></i>
                                             </a>
                                         </li>
-                                        <li class="mobile-menu_wrap d-block d-lg-none">
-                                            <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
-                                                <i class="pe-7s-menu"></i>
-                                            </a>
-                                        </li>
+                                        {% endif %}
                                     </ul>
                                 </div>
                             </div>
@@ -383,8 +383,7 @@
 
 <!--Main JS (Common Activation Codes)-->
 <script src="{% static 'front/js/main.js' %}"></script>
-{% block js %}
-{% endblock %}
+
 </body>
 
 </html>

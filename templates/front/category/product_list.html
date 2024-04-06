@@ -176,8 +176,6 @@
                                                     <li>
                                                         <a href="wishlist.html" data-tippy="Add to wishlist" data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder">
                                                             <i class="pe-7s-like"></i>
-
-                                                            <i class="fa fa-heart" aria-hidden="true"></i>
                                                         </a>
                                                     </li>
                                                     <li class="quuickview-btn" data-bs-toggle="modal" data-bs-target="#quickModal">
@@ -185,13 +183,10 @@
                                                             <i class="pe-7s-look"></i>
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <form method="post">
-                                                            {% csrf_token %}
-                                                            <button type="submit" name="product_id" value="{{query.id}}" data-tippy="Add to cart" data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder">
-                                                                <i class="pe-7s-cart"></i>
-                                                            </button>
-                                                        </form>
+                                                    <li class="quuickview-btn">
+                                                        <a href="{% url 'front:add_to_cart' query.code %}">
+                                                            <i class="pe-7s-cart"></i>
+                                                        </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -240,7 +235,6 @@
                                                     <li>
                                                         <a href="wishlist.html" data-tippy="Add to wishlist" data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder">
                                                             <i class="pe-7s-like"></i>
-                                                            <i class="fa fa-heart" aria-hidden="true"></i>
                                                         </a>
                                                     </li>
                                                     <li class="quuickview-btn" data-bs-toggle="modal" data-bs-target="#quickModal">

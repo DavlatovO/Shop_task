@@ -1,11 +1,15 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from random import sample
 import string
 
 
+
 class CodeGenerate(models.Model):
     code = models.CharField(max_length=255, blank=True,unique=True)
+    
     @staticmethod
     def generate_code():
         return ''.join(sample(string.ascii_letters + string.digits, 15)) 
@@ -59,31 +63,33 @@ class Product(CodeGenerate):
     quantity = models.IntegerField() 
     delivery = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'{self.name}'
-    
     @property
     def stock_status(self):
         return bool(self.quantity)
-    
-class EnterProduct(CodeGenerate):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField()
-    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.product.name}'
+        return f'{self.name}'
+    
 
-    def save(self, *args, **kwargs):
+class EnterProduct(CodeGenerate):
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    quantity = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.product.name}, {self.quantity}'
+    
+
+    def save(self,*args, **kwargs):    
         if self.pk:
-
-            object = EnterProduct.objects.get(id=self.id)
-            self.product.quantity -= object.quantity
-
-        self.product.quantity +=self.quantity
+            obj = EnterProduct.objects.get(id=self.id)
+            self.product.quantity -= obj.quantity
+        self.product.quantity += int(self.quantity)
         self.product.save()
         
-        super(EnterProduct, self).save(*args, **kwargs)
+        super(EnterProduct,self).save(*args, **kwargs)
+
 
 class ProductImg(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -126,11 +132,23 @@ class Review(models.Model):
 
 class Cart(CodeGenerate):
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
-    is_active = models.BooleanField(default=True)
+    status = models.IntegerField(
+        choices=(
+            (1, 'No Faol'),
+            (2, 'Yo`lda'),
+            (3, 'Qaytarilgan'),
+            (4, 'Qabul qilingan'),
+        )
+    )
     order_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.user.username},{self.is_active}'
+    
+    def save(self, *args, **kwargs):
+        if self.status == 2 and Cart.objects.get(id=self.id).status == 1:
+            self.order_date = datetime.now()
+        super(Cart, self).save(*args, **kwargs)
 
     @property
     def total(self):
@@ -174,33 +192,17 @@ class CartProduct(models.Model):
         count = self.count * self.product.price
         return count
     
+    @property
+    def date(self):
+        return self.cart.order_date 
+    
 
 class WishList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
+    
     def __str__(self):
         return f'{self.user.username},{self.product.name}'
     
-    def save(self, *args, **kwargs):
-        if WishList.objects.filter(user=self.user, product=self.product).count():
-            raise ValueError('Dual')
-        super(WishList, self).save(*args, **kwargs)
-
-
-# Review create ---
-        
-# Cart create +
-# Cart list +
-# Cart update + 
-
-# Cart product list + 
-# Cart product create + 
-# Cart product update + 
-# Cart product delete +
-
-# Wishlist create + 
-# Wishlist update - 
-# Wishlist delete +
-# Wishlist list + 
-        
+    

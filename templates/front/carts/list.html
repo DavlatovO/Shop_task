@@ -43,7 +43,7 @@
                                                             {% for q in queryset %}
                                                                 <tr>
                                                                     <td><a class="account-order-id" href="#">#{{q.code}}</a></td>
-                                                                    <td>{{q.order_date}}</td>
+                                                                    <td>{{q.order_date|date:"M d, Y"}}</td>
                                                                     <td>{{q.price}}</td>
                                                                     <td>{{q.total}}</td>
                                                                     <td><a href="{% url 'front:cart_detail' q.code %}" class="btn btn-dark"><span>View</span></a>

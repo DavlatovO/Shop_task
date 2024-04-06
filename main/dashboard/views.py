@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from main.funcs import staff_required
 from main import models
-
+from itertools import chain
 
 @staff_required
 def index(request):
@@ -10,6 +10,7 @@ def index(request):
 
 # ---------CATEGORY-------------
 
+
 @staff_required
 def category_list(request):
     queryset = models.Category.objects.all()
@@ -17,6 +18,7 @@ def category_list(request):
         'queryset':queryset
         }
     return render(request, 'dashboard/category/list.html', context)
+
 
 @staff_required
 def category_create(request):
@@ -28,6 +30,7 @@ def category_create(request):
     return render(request, 'dashboard/category/create.html')
 
 
+@staff_required
 def category_update(request, code):
     queryset = models.Category.objects.get(code=code)
     queryset.name = request.POST['name']
@@ -35,6 +38,7 @@ def category_update(request, code):
     return redirect('dashboard:category_list')
 
 
+@staff_required
 def category_delete(request, code):
     queryset = models.Category.objects.get(code=code)
     queryset.delete()
@@ -42,11 +46,26 @@ def category_delete(request, code):
 
 # ---------PRODUCT----------------
 
+@staff_required
 def product_list(request):
     categories = models.Category.objects.all()
     category_code = request.GET.get('category_code')
     if category_code and category_code != '0':
-        queryset = models.Product.objects.filter(category__code=category_code)
+        if request.GET.get('is_discount'):
+            queryset = models.Product.objects.filter(
+                category__code = category_code,
+                name__icontains = request.GET.get('name'),
+                quantity = request.GET.get('quantity'),
+                discount_price__isnull=False
+                )
+        else:
+            queryset = models.Product.objects.filter(
+                category__code = category_code,
+                name__icontains = request.GET.get('name'),
+                quantity = request.GET.get('quantity'),
+                discount_price__isnull=True
+                )
+
     else:
         queryset = models.Product.objects.all()
     context = {
@@ -57,6 +76,7 @@ def product_list(request):
     return render(request, 'dashboard/product/list.html', context)
 
 
+@staff_required
 def product_detail(request, code):
     queryset = models.Product.objects.get(code=code)
     images = models.ProductImg.objects.filter(product=queryset)
@@ -73,6 +93,7 @@ def product_detail(request, code):
     return render(request, 'dashboard/product/detail.html', context)
     
 
+@staff_required
 def product_create(request):
     categorys = models.Category.objects.all()
     context = {'categorys':categorys}
@@ -103,13 +124,13 @@ def product_create(request):
     return render(request, 'dashboard/product/create.html', context)
 
 
+@staff_required
 def product_update(request, code):
 
     images = models.ProductImg.objects.filter(product__code=code)
     videos = models.ProductVideo.objects.filter(product__code=code)
     categories = models.Category.objects.all()
     product = models.Product.objects.get(code=code)
-
 
     if request.method == 'POST':
         if request.FILES.get('banner_img'):
@@ -146,68 +167,86 @@ def product_update(request, code):
     return render(request,'dashboard/product/update.html',context=context)
 
 
+@staff_required
 def product_delete(request, code):
     product = models.Product.objects.get(code=code)
     product.delete()
     return redirect('dashboard:product_list')
 
 
+@staff_required
 def product_img_delete(request, id):
     product_img = models.ProductImg.objects.get(id=id)
     product_img.delete()
     return redirect('dashboard:product_update',product_img.product_id)
 
 
+@staff_required
 def product_video_delete(request, id):
     product_video = models.ProductVideo.objects.get(id=id)
     product_video.delete()
     return redirect('dashboard:product_update',product_video.product_id)
 
 
-def product_enter(request):
-    product = models.Product.objects.all()
-    context = {'product': product}
-
+@staff_required
+def create_product_enter(request):
+    products = models.Product.objects.all()
     if request.method == 'POST':
-        product = models.Product.objects.get(code=request.POST['code'])
-        quantity = request.POST['quantity']
+        product = models.Product.objects.get(code=request.POST.get('product_code'))
+        quantity = request.POST.get('quantity')
         models.EnterProduct.objects.create(
-            product=product,
-            quantity=quantity
+            product = product,
+            quantity = quantity
         )
+        redirect('dashboard:product_list')
 
-    return render(request, 'dashboard/enterp/enter.html', context)
-
-
-
-
-def list_product_enter(request):
-    queryset = models.EnterProduct.objects.all()
     context = {
-        'queryset': queryset
+        'products':products
     }
-    return render(request, 'dashboard/enterp/list.html', context)
+    
+    return render(request,'dashboard/enter_product/create.html',context)
 
 
 
+@staff_required
+def update_product_enter(request,code):
+    if request.method == 'POST':
+        enter_product = models.EnterProduct.objects.get(code=code)
+        quantity = request.POST.get('quantity')
+        enter_product.quantity = quantity
+        enter_product.save()
+    return redirect('dashboard:list_product_enter')
+    
 
+
+@staff_required
+def list_product_enter(request):
+    products = models.Product.objects.all()
+    context = {
+          'products':products
+    }
+    return render(request, 'dashboard/enter_product/list.html', context)
+
+
+@staff_required
+def detail_product_enter(request,code):
+    queryset = models.EnterProduct.objects.filter(product__code=code)
+    context = {
+          'queryset':queryset
+    }
+    return render(request, 'dashboard/enter_product/detail.html', context)
+
+
+@staff_required
 def product_history(request, code):
     queryset = models.EnterProduct.objects.filter(product__code=code)
-    outs = models.CartProduct.objects.filter(product__code=code, cart__is_active=False)
+    outs = models.CartProduct.objects.filter(product__code = code, cart__is_active=False)
+    result = list(chain(queryset, outs))
 
-    result = queryset.union(outs)
+    result.sort(key = lambda x:x.date, reverse=True)
 
-    context = {'result': result}
-
-    return render(request, 'dashboard/enterp/history.html', context)
-
-
-"""
-kirim ...
-kirim ...
-chiqiim ...
-kirim ...
-chiqim ...
-
-
-"""
+    context = {
+        'result':result
+    }
+    return True
+    # return render(request, 'dashboard/product/history.html', context)
