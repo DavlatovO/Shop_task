@@ -7,6 +7,7 @@ from datetime import datetime
 
 @staff_required
 def index(request):
+   
     context = {}
     return render(request, 'dashboard/index.html', context)
 
