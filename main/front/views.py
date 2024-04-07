@@ -172,12 +172,20 @@ def order_list(request):
         'ordered':ordered,
         'returned':returned,
         }
+ 
     return render(request, 'front/order/list.html',context)
 
+
+def category_delete(request, code):
+    queryset = models.Category.objects.get(code=code)
+    queryset.delete()
+    return redirect('dashboard:category_list')
 
 @login_required(login_url='auth:login')
 def all_products(request):
     categories = models.Category.objects.all()
+    category_code = request.GET.get('category_code')
+    
     products = []
     reviews = models.Review.objects.all()
     if request.user.is_authenticated:
@@ -189,6 +197,16 @@ def all_products(request):
             products.append(i)
     else:
         products = models.Product.objects.all()
+     
+    filter_items = {}
+    for key, value in request.GET.items():
+      if value and not value == '0':  # Filter out empty values and default category
+        if key in ['start_date', 'end_date']:  # Handle date filters
+          key = f"{key.split('_')[0]}__{key.split('_')[1]}"  # Convert to appropriate field name (e.g., date__gte)
+        filter_items[key] = value
+
+  # Apply filters to product queryset
+    products = models.Product.objects.filter(**filter_items) if filter_items else models.Product.objects.all()
 
     
     mark = 0
@@ -197,11 +215,15 @@ def all_products(request):
     
     mark = int(mark/len(reviews)) if reviews else 0
 
+    queryset = models.Product.objects.all()
     context = {
         'categories':categories,
         'products':products,
         'rating':range(1,6),
         'mark':mark,
+        'queryset':queryset,
+        'category_code':category_code,
+    
         }
     
 
@@ -209,12 +231,8 @@ def all_products(request):
 
 
     return render(request, 'front/product/all.html',context)
+    
 
-
-
-
-
-
-
+from django.shortcuts import render
 
 
