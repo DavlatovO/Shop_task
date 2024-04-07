@@ -1,14 +1,13 @@
-from django.apps import apps
 from django.contrib import admin
+from . import models
 
-all_models = apps.get_models()
-
-models_list = []
-
-for model in all_models:
-    if not admin.site.is_registered(model):
-        models_list.append(model)
-
-
-for model_class in models_list:
-    admin.site.register(model_class)
+admin.site.register(models.User)
+admin.site.register(models.Product)
+admin.site.register(models.Category)
+admin.site.register(models.ProductImg)
+admin.site.register(models.ProductVideo)
+admin.site.register(models.Review)
+admin.site.register(models.Cart)
+admin.site.register(models.CartProduct)
+admin.site.register(models.WishList)
+admin.site.register(models.EnterProduct)

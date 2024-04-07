@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from random import sample
 import string
+from datetime import datetime
 
 
 
@@ -132,25 +131,22 @@ class Review(models.Model):
 
 class Cart(CodeGenerate):
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
+    order_date = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(
         choices=(
-            (1, 'No Faol'),
-            (2, 'Yo`lda'),
-            (3, 'Qaytarilgan'),
-            (4, 'Qabul qilingan'),
-        )
-    )
-    order_date = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=False)
-    
-    def __str__(self):
-        return f'{self.user.username}, Status: {self.status}, Active: {self.is_active}'
-    
+            (1,'Nofaol'),
+            (2,'Yo`lda'),
+            (3,'Qaytarilgan'),
+            (4,'Qabul qilingan')
+        ))
 
+    def __str__(self):
+        return f'{self.user.username},{self.status}'
+    
     def save(self, *args, **kwargs):
         if self.status == 2 and Cart.objects.get(id=self.id).status == 1:
             self.order_date = datetime.now()
-        super(Cart, self).save(*args, **kwargs)
+        super(Cart,self).save(*args, **kwargs)
 
     @property
     def total(self):
@@ -187,16 +183,16 @@ class CartProduct(models.Model):
     count = models.IntegerField()
 
     def __str__(self):
-        return f'{self.product.name,self.count,self.cart.is_active}'
+        return f'{self.product.name,self.count,self.cart.status}'
 
+    @property
+    def date(self):
+        return self.cart.order_date
+    
     @property
     def price(self):
         count = self.count * self.product.price
         return count
-    
-    @property
-    def date(self):
-        return self.cart.order_date 
     
 
 class WishList(models.Model):
@@ -206,5 +202,3 @@ class WishList(models.Model):
     
     def __str__(self):
         return f'{self.user.username},{self.product.name}'
-    
-    

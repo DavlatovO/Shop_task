@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from main.funcs import staff_required
 from main import models
 from itertools import chain
+from django.db.models import Q
+from datetime import datetime
 
 @staff_required
 def index(request):
@@ -50,24 +52,25 @@ def category_delete(request, code):
 def product_list(request):
     categories = models.Category.objects.all()
     category_code = request.GET.get('category_code')
-    if category_code and category_code != '0':
-        if request.GET.get('is_discount'):
-            queryset = models.Product.objects.filter(
-                category__code = category_code,
-                name__icontains = request.GET.get('name'),
-                quantity = request.GET.get('quantity'),
-                discount_price__isnull=False
-                )
-        else:
-            queryset = models.Product.objects.filter(
-                category__code = category_code,
-                name__icontains = request.GET.get('name'),
-                quantity = request.GET.get('quantity'),
-                discount_price__isnull=True
-                )
+    if category_code:
+        filter_items = {}
+        for key, value in request.GET.items():
+            if value and not value == '0':
+                if key == 'start_date':
+                    key = 'date__gte'
+                elif key == 'end_date':    
+                    key = 'date__lte'
+                elif key == 'name':
+                    key = 'product__name__icontains'
+                filter_items[key] = value
 
-    else:
-        queryset = models.Product.objects.all()
+        enter = models.EnterProduct.objects.filter(**filter_items)
+
+        print(enter)
+        print(filter_items)
+
+    queryset = models.Product.objects.all()
+
     context = {
           'queryset':queryset,
           'categories':categories,
@@ -83,6 +86,12 @@ def product_detail(request, code):
     reviews = models.Review.objects.filter(product=queryset)
     ratings = range(5,0,-1)
     videos = models.ProductVideo.objects.filter(product=queryset)
+
+    """"""
+    category = queryset.category
+    recomendation = models.Product.objects.filter(category=category).exclude(id=queryset.id)[:3]
+    """"""
+
     context = {
           'queryset':queryset,
           'images':images,
@@ -136,7 +145,7 @@ def product_update(request, code):
         if request.FILES.get('banner_img'):
             product.banner_img = request.FILES.get('banner_img')
         delivery = True if request.POST.get('delivery') else False
-        product.category_id = request.POST.get('category_id')
+        product.category_code = request.POST.get('category_code')
         product.name = request.POST.get('name')
         product.body = request.POST.get('body')
         product.price = request.POST.get('price')
@@ -238,15 +247,13 @@ def detail_product_enter(request,code):
 
 
 @staff_required
-def product_history(request, code):
+def product_history(request,code):
     queryset = models.EnterProduct.objects.filter(product__code=code)
-    outs = models.CartProduct.objects.filter(product__code = code, cart__is_active=False)
-    result = list(chain(queryset, outs))
-
-    result.sort(key = lambda x:x.date, reverse=True)
-
+    outs = models.CartProduct.objects.filter(product__code=code,cart__status=4)
+    data = list(chain(queryset, outs))
+    data = sorted(data, key=lambda x: x.date, reverse=True)
     context = {
-        'result':result
+          'queryset':queryset
     }
-    return True
-    # return render(request, 'dashboard/product/history.html', context)
+    return render(request, 'dashboard/enter_product/history.html', context)
+

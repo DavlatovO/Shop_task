@@ -47,7 +47,7 @@ def log_out(request):
 
 @login_required(login_url='auth:login')
 def profile(request):
-    queryset = models.Cart.objects.filter(user=request.user, is_active=False)
+    queryset = models.Cart.objects.filter(user=request.user, status=4)
     if request.method == 'POST':
         username = request.user.username
         f_name = request.POST.get('f_name')
@@ -72,6 +72,6 @@ def profile(request):
 
 @login_required(login_url='auth:login')
 def carts(request):
-    queryset = models.Cart.objects.filter(user=request.user, is_active=False)
+    queryset = models.Cart.objects.filter(user=request.user, status=4)
     context = {'queryset':queryset}
     return render(request, 'front/carts/list.html')
