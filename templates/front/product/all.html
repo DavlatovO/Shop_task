@@ -32,32 +32,33 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form method="GET" action="">  <div class="form-group">
-                        <label for="category_code">Kategoriya:</label>
-                        <select name="category_code" class="form-control is-valid">
-                          <option value="0">Barchasi</option>
-                          {% for category in categories %}
-                          <option value="{{ category.code }}" {% if category.code == category_code %} selected {% endif %}>{{ category }}</option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="name">Nom:</label>
-                        <input type="text" name="name" class="form-control is-valid" placeholder="Nom...">
-                      </div>
-                      <div class="form-group">
-                        <label for="price">Narx:</label>
-                        <input type="text" name="price" class="form-control is-valid" placeholder="Narx">
-                      </div>
-                      <div class="form-group">
-                        <label for="start_date">Sanadan:</label>
-                        <input type="datetime-local" name="start_date" class="form-control">
-                      </div>
-                      <div class="form-group">
+                    <form method="GET" action="">  
+                        <div class="form-group">
+                          <label for="category_code">Kategoriya:</label>
+                           <select name="category_code" class="form-control is-valid">
+                            <option value="0">Barchasi</option>
+                             {% for category in categories %}
+                             <option value="{{ category.code }}" {% if category.code == category_code %} selected {% endif %}>{{ category }}</option>
+                             {% endfor %}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="name">Nom:</label>
+                          <input type="text" name="name" class="form-control is-valid" placeholder="Nom...">
+                        </div>
+                        <div class="form-group">
+                          <label for="price">Narx:</label>
+                          <input type="text" name="price" class="form-control is-valid" placeholder="Narx">
+                        </div>
+                        <div class="form-group">
+                          <label for="start_date">Sanadan:</label>
+                          <input type="datetime-local" name="start_date" class="form-control">
+                        </div>
+                        <div class="form-group">
                         <label for="end_date">Sanagacha:</label>
-                        <input type="datetime-local" name="end_date" class="form-control">
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-tone m-r-5">Filterlash</button>
+                         <input type="datetime-local" name="end_date" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-tone m-r-5">Filterlash</button>
                     </form>
                   </div>
                 </div>

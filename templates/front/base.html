@@ -134,10 +134,10 @@
                                 <nav class="main-nav">
                                     <ul>
                                         <li class="drop-holder">
-                                            <a href="{% url 'front:index' %}">Home</a>
+                                            <a href="{% url 'front:index' %}">Bosh sahifa</a>
                                         </li>
                                         <li class="drop-holder">
-                                            <a href="blog.html">Category</a>
+                                            <a href="blog.html">Kategoriyalar</a>
                                             <ul class="drop-menu">
                                                 {% for category in categories %}
                                                 <li>
@@ -153,6 +153,17 @@
                             
                                         <li class="drop-holder">
                                             <a href="#">Sahifalar</a>
+                                            <ul class="drop-menu">
+                                                <li><a href="{{ url_data.url }}">Home</a></li>
+                                                
+                                                <li><a href="{% url 'front:all_products' %}">Product List</a></li>
+                                                <li><a href="{% url 'front:carts' %}">Carts</a></li>
+                                                <li><a href="{% url 'front:order_list' %}">Order List</a></li>
+                                                <li><a href="{% url 'front:all_products' %}">All Products</a></li>
+  
+                                                
+                                
+                                            </ul>
                                         </li>
                                         
                                     </ul>
@@ -217,10 +228,9 @@
                                 <img src="{% static 'front/images/logo/dark.png' %}" alt="Logo">
                             </a>
                         </div>
-                        <p class="footer-widget-desc">Lorem ipsum dolor sit amet, consec adipisl elit, sed do eiusmod
-                            tempor
+                        <p class="footer-widget-desc">Bu yerda narsalaringizni sotishingiz mumkkin
                             <br>
-                    incidio ut labore et dolore magna.
+                    Bu yerda sizning reklamangiz bo'lishi mumkin edi
                         </p>
                         <div class="social-link with-border">
                             <ul>
@@ -250,63 +260,63 @@
                 </div>
                 <div class="col-lg-2 col-md-4 pt-40">
                     <div class="footer-widget-item">
-                        <h3 class="footer-widget-title">Useful Links</h3>
+                        <h3 class="footer-widget-title">Foydali Linklar</h3>
                         <ul class="footer-widget-list-item">
                             <li>
-                                <a href="#">About Pronia</a>
+                                <a href="#">Biz haqimizda</a>
                             </li>
                             <li>
-                                <a href="#">How to shop</a>
+                                <a href="#">Sotib olish</a>
                             </li>
                             <li>
                                 <a href="#">FAQ</a>
                             </li>
                             <li>
-                                <a href="#">Contact us</a>
+                                <a href="#">Bog'lanish</a>
                             </li>
                             <li>
-                                <a href="#">Log in</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 pt-40">
-                    <div class="footer-widget-item">
-                        <h3 class="footer-widget-title">My Account</h3>
-                        <ul class="footer-widget-list-item">
-                            <li>
-                                <a href="#">Sign In</a>
-                            </li>
-                            <li>
-                                <a href="#">View Cart</a>
-                            </li>
-                            <li>
-                                <a href="#">My Wishlist</a>
-                            </li>
-                            <li>
-                                <a href="#">Track My Order</a>
-                            </li>
-                            <li>
-                                <a href="#">Help</a>
+                                <a href="#">Kirish</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 pt-40">
                     <div class="footer-widget-item">
-                        <h3 class="footer-widget-title">Our Service</h3>
+                        <h3 class="footer-widget-title">Akkountim</h3>
                         <ul class="footer-widget-list-item">
                             <li>
-                                <a href="#">Payment Methods</a>
+                                <a href="#">Kirish</a>
                             </li>
                             <li>
-                                <a href="#">Money Guarantee!</a>
+                                <a href="#">Korzinkani ko'rish</a>
                             </li>
                             <li>
-                                <a href="#">Returns</a>
+                                <a href="#">Yoqtirilganlar</a>
                             </li>
                             <li>
-                                <a href="#">Shipping</a>
+                                <a href="#">Buyurtmani kuzatish</a>
+                            </li>
+                            <li>
+                                <a href="#">Yordam</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 pt-40">
+                    <div class="footer-widget-item">
+                        <h3 class="footer-widget-title">Xizmatlarimiz</h3>
+                        <ul class="footer-widget-list-item">
+                            <li>
+                                <a href="#">To'lov turlari</a>
+                            </li>
+                            <li>
+                                <a href="#">Pul xavfsizligi</a>
+                            </li>
+                            <li>
+                                <a href="#">Qaytarish</a>
+                            </li>
+                            <li>
+                                <a href="#">Jo'natish</a>
                             </li>
                             <li>
                                 <a href="#">Privacy Policy</a>
@@ -316,12 +326,12 @@
                 </div>
                 <div class="col-lg-3 pt-40">
                     <div class="footer-contact-info">
-                        <h3 class="footer-widget-title">Got Question? Call Us</h3>
+                        <h3 class="footer-widget-title">Savol bormi? Qo'ng'iroq qiling</h3>
                         <a class="number" href="tel://123-456-789">123 456 789</a>
                         <div class="address">
                             <ul>
                                 <li>
-                                    Your Address Goes Here
+                                    Sizning addressingiz
                                 </li>
                             </ul>
                         </div>

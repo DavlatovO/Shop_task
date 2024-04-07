@@ -236,3 +236,5 @@ def all_products(request):
 from django.shortcuts import render
 
 
+
+

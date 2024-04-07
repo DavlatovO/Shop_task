@@ -805,8 +805,7 @@
                 <div class="testimonial-bg" data-bg-image="{% static 'front/images/testimonial/bg/1-1-1820x443.jpg' %}">
                     <div class="section-title-wrap">
                         <h2 class="section-title">Mijozlarimiz mahsulotlarimiz haqida</h2>
-                        <p class="section-desc mb-0">Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
+                        <p class="section-desc mb-0">Bu yerda mijozlarimizning biz haqimizdagi fikrlarini o'qishingiz mumkin
                         </p>
                     </div>
                 </div>
@@ -820,50 +819,17 @@
                                             <img src="{% static 'front/images/testimonial/user/1.png' %}" alt="User Image">
                                         </div>
                                     </div>
+                                    {% for r in reviews %}
                                     <div class="user-content text-charcoal">
-                                        <h4 class="user-name mb-1">Phoenix Baker</h4>
-                                        <span class="user-occupation">Client</span>
+                                        <h4 class="user-name mb-1">{{r.user}}</h4>
+                                        <span class="user-occupation">{{r.text}}</span>
                                     </div>
+                                    {% endfor %}
                                 </div>
-                                <p class="user-comment mb-6">Lorem ipsum dolor sit amet, conse adipisic elit, sed do eiusmod
-                                    tempo
-                                    incididunt ut labore et dolore. magna
+                                <p class="user-comment mb-6">
                                 </p>
                             </div>
-                            <div class="swiper-slide testimonial-item">
-                                <div class="user-info mb-3">
-                                    <div class="user-shape-wrap">
-                                        <div class="user-img">
-                                            <img src="{% static 'front/images/testimonial/user/2.png' %}" alt="User Image">
-                                        </div>
-                                    </div>
-                                    <div class="user-content text-charcoal">
-                                        <h4 class="user-name mb-1">Phoenix Baker</h4>
-                                        <span class="user-occupation">Client</span>
-                                    </div>
-                                </div>
-                                <p class="user-comment mb-6">Lorem ipsum dolor sit amet, conse adipisic elit, sed do eiusmod
-                                    tempo
-                                    incididunt ut labore et dolore. magna
-                                </p>
-                            </div>
-                            <div class="swiper-slide testimonial-item">
-                                <div class="user-info mb-3">
-                                    <div class="user-shape-wrap">
-                                        <div class="user-img">
-                                            <img src="{% static 'front/images/testimonial/user/3.png' %}" alt="User Image">
-                                        </div>
-                                    </div>
-                                    <div class="user-content text-charcoal">
-                                        <h4 class="user-name mb-1">Phoenix Baker</h4>
-                                        <span class="user-occupation">Client</span>
-                                    </div>
-                                </div>
-                                <p class="user-comment mb-6">Lorem ipsum dolor sit amet, conse adipisic elit, sed do eiusmod
-                                    tempo
-                                    incididunt ut labore et dolore. magna
-                                </p>
-                            </div>
+                            
                         </div>
                         <!-- Add Pagination -->
                         <div class="swiper-pagination without-absolute"></div>
