@@ -25,8 +25,8 @@ def index(request):
     mark = int(mark/len(reviews)) if reviews else 0
 
     context = {
-        'categories':categories,
-        'products':products,
+        'categories':paginator_page(categories, 4, request),
+        'products':paginator_page(products, 4, request),
         'rating':range(1,6),
         'mark':mark,
         }
@@ -71,8 +71,8 @@ def product_list(request,code):
         products = models.Product.objects.filter(category__code=code)
     
     context = {
-        'products':products,
-        'categories':categories,
+        'products':paginator_page(products, 4, request ),
+        'categories':paginator_page(categories, 4, request)
         }
     return render(request, 'front/category/product_list.html',context)
 
@@ -234,6 +234,37 @@ def all_products(request):
     
 
 from django.shortcuts import render
+
+
+
+from django.shortcuts import render
+from PIL import Image
+from io import BytesIO
+import base64
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
+
+def paginator_page(List, num, request):
+    # http:127.0.0.1:8000/teacher?page=100
+    paginator = Paginator(List, num)
+    pages = request.GET.get('page')
+    try:
+        list = paginator.page(pages)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    return list
+
+
+
+
+
+
+
+
+
 
 
 

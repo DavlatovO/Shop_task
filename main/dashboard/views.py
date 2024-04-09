@@ -258,3 +258,59 @@ def product_history(request,code):
     }
     return render(request, 'dashboard/enter_product/history.html', context)
 
+
+from django.shortcuts import render
+from PIL import Image
+from io import BytesIO
+import base64
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
+def paginator_page(List, num, request):
+    # http:127.0.0.1:8000/teacher?page=100
+    paginator = Paginator(List, num)
+    pages = request.GET.get('page')
+    try:
+        list = paginator.page(pages)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    return list
+
+
+# def index(request):
+#     context = {}
+#     if request.method == "POST":
+#         qr_text = request.POST.get("qr_text", "")
+#         qr_image = qrcode.make(qr_text, box_size=15)
+#         qr_image_pil = qr_image.get_image()
+#         stream = BytesIO()
+#         qr_image_pil.save(stream, format='PNG')
+#         qr_image_data = stream.getvalue()
+#         qr_image_base64 = base64.b64encode(qr_image_data).decode('utf-8')
+#         context['qr_image_base64'] = qr_image_base64
+#         context['variable'] = qr_text
+#     return render(request, 'index.html', context=context)
+
+
+def teacher_list(request):
+    teachers = models.Teacher.objects.all()
+    context = {
+        'teachers':paginator_page(teachers, 2, request)
+    }
+    return render(request, 'teacher.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
