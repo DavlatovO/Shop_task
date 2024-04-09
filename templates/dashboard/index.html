@@ -1,7 +1,35 @@
 {% extends 'dashboard/base.html' %}
 
-{% load static %}
 {% block content %}
+{% load static %}
+
+<head>
+    <style>
+        #simple-line-chart {
+            height: 400px;
+            width: 800px;
+            }
+            .chart-indicator {
+                
+                width: 10px; /* Adjust width as needed */
+                height: 10px; /* Adjust height as needed */
+                display: inline-block;
+                margin-left: 10px; /* Adjust margin as needed */
+                margin-top: 10px; /* Adjust margin as needed */
+              }
+              
+              .indicator-1 {
+                background-color:blue; /* Red color */
+              }
+              
+              .indicator-2 {
+                background-color:lightgreen; /* Set color for indicator 2 */
+              }
+        </style>
+           
+</head>
+
+
 <!-- Content Wrapper START -->
          <div class="main-content">
             <div class="page-header no-gutters">
@@ -44,39 +72,39 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
+            </div>
+            <div class="row">
+                <div class="ct-chart" id="simple-line-chart"></div>
+            </div>
+            <div class="legend">
+                <!-- Color Legend -->
+                <div class="chart-indicator indicator-1"></div> <span>Products</span>
+                <div class="chart-indicator indicator-2"></div> <span>Queries</span>
             </div>
         </div>
-        <!-- Content Wrapper END -->
- 
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Total Revenue</h5>
-                <div>
-                    <div class="btn-group">
-                        <button class="btn btn-default active">
-                            <span>Month</span>
-                        </button>
-                        <button class="btn btn-default">
-                            <span>Year</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="m-t-50" style="height: 330px"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                <canvas class="chart chartjs-render-monitor" id="revenue-chart" width="414" height="330" style="display: block; width: 414px; height: 330px;"></canvas>
-            </div>
-        </div>
+    
+  
+        
 
+    
+<!-- page js -->
+<script src="{% static 'dashboard/vendors/chartist/chartist.min.js' %}"></script>
 
-
-
-
-
-
-
-
-
+<script>
+    new Chartist.Line('#simple-line-chart', {
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    series: [
+        [2, 13, 6, 8, 15],
+        [2, 8, 3, 4, 9]
+    ]
+    }, {
+    fullWidth: true,
+    chartPadding: {
+        right: 1
+    }
+});
+</script>
 
 
 {% endblock %}
